@@ -765,4 +765,10 @@ void cudaq_internal::compiler::configurePassManagerFromEnv(PassManager &pm) {
   // Compiler::prepareModule.
   if (printEachPass == cudaq::PrintEachPassMode::All)
     pm.enableIRPrinting();
+  auto enableStats = cudaq::getEnvBool("CUDAQ_MLIR_PASS_STATISTICS", false);
+  if (enableStats)
+    pm.enableStatistics(PassDisplayMode::Pipeline);
+  auto enableTimes = cudaq::getEnvBool("CUDAQ_MLIR_ENABLE_TIMING", false);
+  if (enableTimes)
+    pm.enableTiming();
 }
