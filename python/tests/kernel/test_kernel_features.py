@@ -2380,6 +2380,7 @@ def test_custom_classical_kernel_type():
         q = cudaq.qvector(input.i)
 
     instance = TestClass(2, 2.2)
+    #@skipIfValueSemantics
     #state = cudaq.get_state(test, instance)
     #state.dump()
 
