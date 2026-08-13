@@ -27,8 +27,18 @@ if(CUDAQ_REALTIME_STANDALONE_BUILD)
       "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel")
 
   # Set a default install prefix if none was specified.
-  set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/.cudaq_realtime" CACHE STRING
+  set(CMAKE_INSTALL_PREFIX "$ENV{HOME}/.cudaq_realtime" CACHE PATH
       "Install path prefix, prepended onto install directories")
+
+  # Guard against CMAKE_INSTALL_PREFIX being stored as a non-path cache
+  # variable, which would disable CMake path normalization and the GUI
+  # directory picker. Upgrade any stale STRING cache entry.
+  set_property(CACHE CMAKE_INSTALL_PREFIX PROPERTY TYPE PATH)
+  get_property(_cudar_install_prefix_type CACHE CMAKE_INSTALL_PREFIX PROPERTY TYPE)
+  if(NOT _cudar_install_prefix_type STREQUAL "PATH")
+    message(FATAL_ERROR "CMAKE_INSTALL_PREFIX must be a CACHE PATH (found: ${_cudar_install_prefix_type})")
+  endif()
+  unset(_cudar_install_prefix_type)
 endif()
 
 # Project setup
